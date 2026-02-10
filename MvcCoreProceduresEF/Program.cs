@@ -1,7 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using MvcCoreProceduresEF.Data;
+using MvcCoreProceduresEF.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddTransient<RepositoryEnfermos>();
+builder.Services.AddDbContext<EnfermosContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlHospital")));
 
 var app = builder.Build();
 
