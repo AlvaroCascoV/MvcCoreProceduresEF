@@ -22,15 +22,15 @@ namespace MvcCoreProceduresEF.Controllers
         public async Task<IActionResult> Index(string especialidad, int incremento, string updateopt)
         {
             List<string> especialidades = await this.repo.GetEspecialidadesAsync();
-            if (updateopt == "0")
+            if (updateopt == "raw")
             {
                 await this.repo.UpdateSalarioAsync(especialidad, incremento);
                 ViewData["METODO"] = "procedure";
             }
-            else if (updateopt == "1")
+            else if (updateopt == "ef")
             {
                 await this.repo.UpdateSalarioLinqAsync(especialidad, incremento);
-                ViewData["METODO"] = "Linq";
+                ViewData["METODO"] = "EF";
             }
             List<Doctor> doctores = await this.repo.GetDoctoresEspecialidadAsync(especialidad);
             ViewData["DOCTORES"] = doctores;
