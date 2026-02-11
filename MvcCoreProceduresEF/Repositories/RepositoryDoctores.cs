@@ -81,7 +81,13 @@ namespace MvcCoreProceduresEF.Repositories
         
         public async Task UpdateSalarioLinqAsync(string especialidad, int incremento)
         {
-            List<Doctor> doctores = await this.GetDoctoresEspecialidadAsync(especialidad);
+            //DEBEMOS RECUPERAR LOS DATOS A MODIFICAR/ELIMINAR DESDE EL CONTEXT
+            var consulta = from datos in this.context.Doctores 
+                           where datos.Especialidad == especialidad 
+                           select datos;
+            List<Doctor> doctores = await consulta.ToListAsync();
+            //esto funciona pq viene del context pero en un futuro o proyecto mas grande, puede romper
+            //List <Doctor> doctores = await this.GetDoctoresEspecialidadAsync(especialidad);
             if (doctores != null)
             {
                 foreach (var doctor in doctores)
