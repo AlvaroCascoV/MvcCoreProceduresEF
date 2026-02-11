@@ -61,14 +61,6 @@ namespace MvcCoreProceduresEF.Repositories
                 return especialidades;
             }
         }
-        public async Task UpdateSalarioAsync(string especialidad, int incremento)
-        {
-            string sql = "SP_UPDATE_DOCTOR_EF @especialidad, @incremento";
-            SqlParameter pamEsp = new SqlParameter("@especialidad", especialidad);
-            SqlParameter pamInc = new SqlParameter("@incremento", incremento);
-
-            await this.context.Database.ExecuteSqlRawAsync(sql, pamEsp, pamInc);
-        }
         public async Task<List<Doctor>> GetDoctoresEspecialidadAsync(string especialidad)
         {
 
@@ -78,6 +70,15 @@ namespace MvcCoreProceduresEF.Repositories
             List<Doctor> doctores = await consulta.ToListAsync();
             return doctores;
         }
+        public async Task UpdateSalarioAsync(string especialidad, int incremento)
+        {
+            string sql = "SP_UPDATE_DOCTOR_EF @especialidad, @incremento";
+            SqlParameter pamEsp = new SqlParameter("@especialidad", especialidad);
+            SqlParameter pamInc = new SqlParameter("@incremento", incremento);
+
+            await this.context.Database.ExecuteSqlRawAsync(sql, pamEsp, pamInc);
+        }
+        
         public async Task UpdateSalarioLinqAsync(string especialidad, int incremento)
         {
             List<Doctor> doctores = await this.GetDoctoresEspecialidadAsync(especialidad);

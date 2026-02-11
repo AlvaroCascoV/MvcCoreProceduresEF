@@ -25,15 +25,22 @@ namespace MvcCoreProceduresEF.Controllers
             if (updateopt == "raw")
             {
                 await this.repo.UpdateSalarioAsync(especialidad, incremento);
+                List<Doctor> doctores = await this.repo.GetDoctoresEspecialidadAsync(especialidad);
+                ViewData["DOCTORES"] = doctores;
                 ViewData["METODO"] = "procedure";
             }
             else if (updateopt == "ef")
             {
                 await this.repo.UpdateSalarioLinqAsync(especialidad, incremento);
+                List<Doctor> doctores = await this.repo.GetDoctoresEspecialidadAsync(especialidad);
+                ViewData["DOCTORES"] = doctores;
                 ViewData["METODO"] = "EF";
+            }else if (updateopt == "buscar")
+            {
+                List<Doctor> doctores = await this.repo.GetDoctoresEspecialidadAsync(especialidad);
+                ViewData["DOCTORES"] = doctores;
+                ViewData["METODO"] = "Buscar";
             }
-            List<Doctor> doctores = await this.repo.GetDoctoresEspecialidadAsync(especialidad);
-            ViewData["DOCTORES"] = doctores;
             return View(especialidades);
         }
     }
