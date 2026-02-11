@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    List<Doctor> doctores = new List<Doctor>();
+    doctores = ViewData["DOCTORES"] as List<Doctor>;
+}
+@model List<string>
+
+<h1>Doctores</h1>
+<h3 style="color:red">@ViewData["METODO"]</h3>
+
+<form method="post">
+    <select class="form-control" name="especialidad">
+        @foreach (string esp in Model)
+            {
+                <option value="@esp">@esp</option>
+            }
+    </select>
+    <label>Incremento:</label>
+    <input class="form-control" type="text" name="incremento"/>
+    <button class="btn btn-success" name="updateopt" value="0">Incrementar</button>
+    <button class="btn btn-success" name="updateopt" value="1">Linq</button>
+</form>
+@if (doctores != null)
+{
+    
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Apellido</th>
+            <th>Especialidad</th>
+            <th>Salario</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Doctor doctor in doctores)
+        {
+            <tr>
+                <td>@doctor.Apellido</td>
+                <td>@doctor.Especialidad</td>
+                <td>@doctor.Salario</td>
+            </tr>
+        }
+    
+    </tbody>
+</table>
+}
