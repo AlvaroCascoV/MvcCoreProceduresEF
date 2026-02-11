@@ -40,7 +40,7 @@ namespace MvcCoreProceduresEF.Controllers
         [HttpPost]
         public async Task<IActionResult> Insert(Enfermo enf)
         {
-            await this.repo.InserEnfermoAsync(enf.Apellido, enf.Direccion, enf.FechaNacimiento, enf.Genero, enf.Nss);
+            await this.repo.InsertEnfermoAsync(enf.Apellido, enf.Direccion, enf.FechaNacimiento, enf.Genero, enf.Nss);
             return RedirectToAction("Index");
         }
         public async Task<IActionResult> InsertRaw() 
@@ -50,7 +50,7 @@ namespace MvcCoreProceduresEF.Controllers
         [HttpPost]
         public async Task<IActionResult> InsertRaw(Enfermo enf)
         {
-            await this.repo.InserEnfermoRawAsync(enf.Apellido, enf.Direccion, enf.FechaNacimiento, enf.Genero, enf.Nss);
+            await this.repo.InsertEnfermoRawAsync(enf.Apellido, enf.Direccion, enf.FechaNacimiento, enf.Genero, enf.Nss);
             return RedirectToAction("Index");
         }
     }

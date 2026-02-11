@@ -1,35 +1,48 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using MvcCoreProceduresEF.Data;
 using MvcCoreProceduresEF.Models;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics.Metrics;
 
 namespace MvcCoreProceduresEF.Repositories
 {
 
     #region STORED PROCEDURES
 
-    //select* from enfermo
+//    select* from enfermo
 
-    //create procedure SP_ALL_ENFERMOS
-    //as
-    //select* from ENFERMO
-    //go
+//create procedure SP_ALL_ENFERMOS
+//as
+//select* from ENFERMO
+//go
 
-    //create procedure SP_FIND_ENFERMO
-    //(@inscripcion nvarchar(50))
-    //as
-    //select* from ENFERMO where INSCRIPCION=@inscripcion
-    //go
+//create procedure SP_FIND_ENFERMO
+//(@inscripcion nvarchar(50))
+//as
+//select* from ENFERMO where INSCRIPCION=@inscripcion
+//go
 
-    //create procedure SP_DELETE_ENFERMO
-    //(@inscripcion nvarchar(50))
-    //as
-    //delete from ENFERMO where INSCRIPCION=@inscripcion
-    //go
+//create procedure SP_DELETE_ENFERMO
+//(@inscripcion nvarchar(50))
+//as
+//delete from ENFERMO where INSCRIPCION=@inscripcion
+//go
+
+//create procedure SP_INSERT_ENFERMO
+//(@apellido nvarchar(50), @direccion nvarchar(50), @fechanac datetime, @sexo nvarchar(50), @nss nvarchar(50))
+//as
+//	declare @inscripcion nvarchar(50);
+//    select @inscripcion = (select cast(MAX(INSCRIPCION) as int) from ENFERMO ) + 1;
+//	insert into ENFERMO values(@inscripcion, @apellido, @direccion, @fechanac, @sexo, @nss)
+//go
+
+//exec SP_INSERT_ENFERMO casco, casa,1234,n,1543
 
     #endregion
 
@@ -123,7 +136,7 @@ namespace MvcCoreProceduresEF.Repositories
             await this.context.Database.ExecuteSqlRawAsync(sql, pamIns);
         }
 
-        public async Task InserEnfermoAsync(string apellido, string direccion, DateTime fechanac, string sexo, string nss)
+        public async Task InsertEnfermoAsync(string apellido, string direccion, DateTime fechanac, string sexo, string nss)
         {
             string sql = "SP_INSERT_ENFERMO";
             SqlParameter pamApe = new SqlParameter("@apellido", apellido);
@@ -149,7 +162,7 @@ namespace MvcCoreProceduresEF.Repositories
                 com.Parameters.Clear();
             }
         }
-        public async Task InserEnfermoRawAsync(string apellido, string direccion, DateTime fechanac, string sexo, string nss)
+        public async Task InsertEnfermoRawAsync(string apellido, string direccion, DateTime fechanac, string sexo, string nss)
         {
             string sql = "SP_INSERT_ENFERMO @apellido, @direccion, @fechanac, @sexo, @nss";
             SqlParameter pamApe = new SqlParameter("@apellido", apellido);
