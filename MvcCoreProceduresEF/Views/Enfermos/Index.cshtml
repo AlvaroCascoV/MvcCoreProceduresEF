@@ -7,7 +7,8 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Insert" asp-controller="Enfermos" class="btn btn-success">Create New</a>
+    <a asp-action="InsertRaw" asp-controller="Enfermos" class="btn btn-outline-success">Create Raw</a>
 </p>
 <table class="table">
     <thead>
@@ -55,9 +56,10 @@
                 @Html.DisplayFor(modelItem => item.Nss)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { item.Inscripcion }) |
-                @Html.ActionLink("Details", "Details", new { item.Inscripcion }) |
-                @Html.ActionLink("Delete", "Delete", new { item.Inscripcion })
+                <a class="btn btn-warning" asp-route-inscripcion="@item.Inscripcion" asp-controller="Enfermos" asp-action="Edit">Edit</a>
+                <a class="btn btn-primary" asp-route-inscripcion="@item.Inscripcion" asp-controller="Enfermos" asp-action="Details">Details</a>
+                <a class="btn btn-danger" asp-route-inscripcion="@item.Inscripcion" asp-controller="Enfermos" asp-action="Delete">Delete</a>
+                <a class="btn btn-outline-danger" asp-route-inscripcion="@item.Inscripcion" asp-controller="Enfermos" asp-action="DeleteRaw">DeleteRaw</a>
             </td>
         </tr>
 }

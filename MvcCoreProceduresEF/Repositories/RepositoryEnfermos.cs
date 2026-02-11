@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using MvcCoreProceduresEF.Data;
 using MvcCoreProceduresEF.Models;
@@ -73,6 +74,91 @@ namespace MvcCoreProceduresEF.Repositories
                 await com.Connection.CloseAsync();
                 return enfermos;
             }
+        }
+
+        public async Task<Enfermo> FindEnfermoAsync(string inscripcion)
+        {
+            //PARA LLAMAR A UN PROCEDIMIENTO QUE CONTIENE PARAMETROS
+            //LA LLAMADA SE REALIZA MEDIANTE EL NOMBRE DEL PROCEDURE
+            //Y CADA PARAMETRO A CONTINUACION EN LA DECLARACION
+            //DEL SQL: SP_PROCEDURE @PAM1, @PAM2
+            string sql = "SP_FIND_ENFERMO @inscripcion";
+            SqlParameter pamIns = new SqlParameter("@inscripcion", inscripcion);
+            //SI LOS DATOS QUE DEVUELVE EL PROCEDURE ESTAN MAPEADOS
+            //CON UN MODEL, PODEMOS UTILIZAR EL METODO
+            //FromSqlRaw PARA RECUPERAR DIRECTAMENTE EL MODEL/S.
+            //NO PODEMOS CONSULTAR Y EXTRAER A LA VEX CON LINQ, SE DEBE
+            //REALIZAR SIEMPRE EN DOS PASOS
+            //hay que hacerlo async
+            var consulta = this.context.Enfermos.FromSqlRaw(sql, pamIns);
+            Enfermo enfermo = await consulta.ToAsyncEnumerable().FirstOrDefaultAsync();
+            //otra forma
+            //var consulta = this.context.Enfermos.FromSqlRaw(sql, pamIns).ToListAsync();
+            //Enfermo enfermo = await consulta.FirstOrDefault();
+
+            //DEBEMOS UTILIZAR AsEnumerable() PARA EXTRAER LOS DATOS
+            //Enfermo enfermo = consulta.AsEnumerable().FirstOrDefault();
+            return enfermo;
+        }
+
+        public async Task DeleteEnfermoAsync(string inscripcion)
+        {
+            string sql = "SP_DELETE_ENFERMO";
+            SqlParameter pamIns = new SqlParameter("@inscripcion", inscripcion);
+            using (DbCommand com = this.context.Database.GetDbConnection().CreateCommand())
+            {
+                com.CommandType = CommandType.StoredProcedure;
+                com.CommandText = sql;
+                com.Parameters.Add(pamIns);
+                await com.Connection.OpenAsync();
+                await com.ExecuteNonQueryAsync();
+                await com.Connection.CloseAsync();
+                com.Parameters.Clear();
+            }
+        }
+        public async Task DeleteEnfermoRawAsync(string inscripcion)
+        {
+            string sql = "SP_DELETE_ENFERMO @inscripcion";
+            SqlParameter pamIns = new SqlParameter("@inscripcion", inscripcion);
+            await this.context.Database.ExecuteSqlRawAsync(sql, pamIns);
+        }
+
+        public async Task InserEnfermoAsync(string apellido, string direccion, DateTime fechanac, string sexo, string nss)
+        {
+            string sql = "SP_INSERT_ENFERMO";
+            SqlParameter pamApe = new SqlParameter("@apellido", apellido);
+            SqlParameter pamDir = new SqlParameter("@direccion", direccion);
+            SqlParameter pamFN = new SqlParameter("@fechanac", fechanac);
+            SqlParameter pamSex = new SqlParameter("@sexo", sexo);
+            SqlParameter pamNss = new SqlParameter("@nss", nss);
+
+            using (DbCommand com = this.context.Database.GetDbConnection().CreateCommand())
+            {
+                com.CommandType = CommandType.StoredProcedure;
+                com.CommandText = sql;
+                
+                com.Parameters.Add(pamApe);
+                com.Parameters.Add(pamDir);
+                com.Parameters.Add(pamFN);
+                com.Parameters.Add(pamSex);
+                com.Parameters.Add(pamNss);
+
+                await com.Connection.OpenAsync();
+                await com.ExecuteNonQueryAsync();
+                await com.Connection.CloseAsync();
+                com.Parameters.Clear();
+            }
+        }
+        public async Task InserEnfermoRawAsync(string apellido, string direccion, DateTime fechanac, string sexo, string nss)
+        {
+            string sql = "SP_INSERT_ENFERMO @apellido, @direccion, @fechanac, @sexo, @nss";
+            SqlParameter pamApe = new SqlParameter("@apellido", apellido);
+            SqlParameter pamDir = new SqlParameter("@direccion", direccion);
+            SqlParameter pamFN = new SqlParameter("@fechanac", fechanac);
+            SqlParameter pamSex = new SqlParameter("@sexo", sexo);
+            SqlParameter pamNss = new SqlParameter("@nss", nss);
+
+            await this.context.Database.ExecuteSqlRawAsync(sql, pamApe, pamDir, pamFN, pamSex, pamNss);
         }
     }
 }
