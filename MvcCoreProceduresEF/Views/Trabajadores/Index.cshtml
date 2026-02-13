@@ -1,0 +1,68 @@
+﻿@model TrabajadoresModel
+
+@{
+    List<string> oficios = ViewData["OFICIOS"] as List<string>;
+    ViewData["Title"] = "Index";
+}
+
+<h1>Trabajadores</h1>
+
+<form method="post">
+    <label>Seleccione un oficio</label>
+    <select name="oficio" class="form-control">
+        @foreach(string oficio in oficios)
+        {
+            <option>@oficio</option>
+        }
+    </select>
+    <button class="btn btn-primary">Buscar Trabajadores</button>
+</form>
+
+<ul class="list-group">
+    <li class="list-group-item">Personas: @Model.Personas</li>
+    <li class="list-group-item">Suma Salarial: @Model.SumaSalarial</li>
+    <li class="list-group-item">Media Salarial: @Model.MediaSalarial</li>
+</ul>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                Id Trabajador
+            </th>
+            <th>
+                Apellido
+            </th>
+            <th>
+                Oficio
+            </th>
+            <th>
+                Salario
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Trabajadores) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdTrabajador)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Apellido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Oficio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Salario)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { item.IdTrabajador }) |
+                @Html.ActionLink("Details", "Details", new { item.IdTrabajador }) |
+                @Html.ActionLink("Delete", "Delete", new { item.IdTrabajador })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
